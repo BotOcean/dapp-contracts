@@ -1,0 +1,27 @@
+{
+  "name": "botocean-dapp-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx truffle test --network development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BotOcean/botocean-dapp-contracts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BotOcean/botocean-dapp-contracts/issues"
+  },
+  "homepage": "https://github.com/BotOcean/botocean-dapp-contracts#readme",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.4.0",
+    "axios": "^0.21.1",
+    "bn.js": "^5.2.0",
+    "ganache-cli": "^6.11.1-beta.1",
+    "ganache-core": "^2.13.1-beta.1",
+    "truffle": "^5.3.10"
+  }
+}
