@@ -302,7 +302,8 @@ contract FundLogic is FundShares, FundLibrary{
             msg.sender,
             _amount,
             sharesToMint,
-            sharePriceUSD()
+            sharePriceUSD(),
+            block.timestamp
         );
 
         return sharesToMint;
@@ -339,7 +340,8 @@ contract FundLogic is FundShares, FundLibrary{
         emit Withdraw(
             msg.sender,
             _sharesAmount,
-            sharePriceUSD()
+            sharePriceUSD(),
+            block.timestamp
         );
     }
 
@@ -369,7 +371,8 @@ contract FundLogic is FundShares, FundLibrary{
             _src,
             _dst,
             _amount,
-            _after.sub(_before)
+            _after.sub(_before),
+            block.timestamp
         );
 
         return _after.sub(_before);
@@ -429,7 +432,8 @@ contract FundLogic is FundShares, FundLibrary{
                 newSharePrice,
                 profitUSD,
                 buybackShares,
-                managerFeeShares
+                managerFeeShares,
+                block.timestamp
             );
 
             // Update values

@@ -41,7 +41,8 @@ contract FundDeployer {
         string fundName,
         string managerName,
         address depositAsset,
-        address manager
+        address manager,
+        uint256 timestamp
     );
 
     event OwnerUpdate(
@@ -220,7 +221,8 @@ contract FundDeployer {
             _fundName,
             _managerName,
             _depositAsset,
-            msg.sender
+            msg.sender,
+            block.timestamp
         );
 
         // Alert buyback vault with new fund
