@@ -48,6 +48,9 @@ contract FundLogic is FundShares, FundLibrary{
     address public PARASWAP_TOKEN_PROXY;
     address public PARASWAP_AUGUSTUS;
 
+    uint256 public minDeposit;
+    uint256 public maxDeposit;
+
     modifier onlyManager() {
         require(msg.sender == manager, "Unauthorized: Only manager");
         _;
@@ -71,6 +74,18 @@ contract FundLogic is FundShares, FundLibrary{
         _;
     }
 
+    modifier depositLimit(uint256 _amount) {
+        if(minDeposit > 0) {
+            require(_amount > minDeposit, "Deposit too small");
+        }
+
+        if(maxDeposit > 0) {
+            require(_amount < maxDeposit, "Deposit too big");
+        }
+
+        _;
+    }
+
     function init(
         address _oracle,
         address _deployer,
@@ -81,7 +96,9 @@ contract FundLogic is FundShares, FundLibrary{
         uint256 _performanceFee,
         address _paraswapProxy,
         address _paraswapAugustus,
-        address _bbvault
+        address _bbvault,
+        uint256 _min,
+        uint256 _max
     ) public onlyProxy{
         require(!wasInitialized, "Fund already initialized");
         require(_performanceFee <= 10000, "Performance fee too big");
@@ -106,6 +123,9 @@ contract FundLogic is FundShares, FundLibrary{
         PARASWAP_AUGUSTUS = _paraswapAugustus;
 
         buybackVault = _bbvault;
+
+        minDeposit = _min;
+        maxDeposit = _max;
 
         _initializeShares("BotOcean Fund", "BOF");
     }
@@ -200,6 +220,14 @@ contract FundLogic is FundShares, FundLibrary{
         emit AssetRemoved(_asset);
     }
 
+    function changeMinDeposit(uint256 _minDeposit) external onlyManager {
+        minDeposit = _minDeposit;
+    }
+
+    function changeMaxDeposit(uint256 _maxDeposit) external onlyManager {
+        maxDeposit = _maxDeposit;
+    }
+
     function _addActiveAsset(address _asset) internal {
         if(!isActiveAsset[_asset]){
             require(AssetOracle(oracle).isSupportedAsset(_asset), "Asset not supported");
@@ -260,7 +288,7 @@ contract FundLogic is FundShares, FundLibrary{
         return _valueUSD.mul(1e18).div(_totalSupply);
     }
 
-    function deposit(uint256 _amount) external onlyProxy arbProtection returns (uint256){
+    function deposit(uint256 _amount) external onlyProxy arbProtection depositLimit(_amount) returns (uint256){
         // Dont't mint fees on first deposit since we do not know the share of a price
         if(firstDeposit){
             _settleFees();

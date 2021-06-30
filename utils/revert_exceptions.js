@@ -13,6 +13,7 @@ async function tryCatch(promise, message) {
 };
 
 module.exports = {
+    catchDepositLimit      : async function(promise) {await tryCatch(promise, "revert Deposit too");},
     catchArbProtection : async function(promise) {await tryCatch(promise, "revert ARB PROTECTION");},
     catchGenesisProtection : async function(promise) {await tryCatch(promise, "revert Genesis Logic");},
     catchRevert            : async function(promise) {await tryCatch(promise, "revert"              );},

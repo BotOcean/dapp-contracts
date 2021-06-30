@@ -14,6 +14,7 @@ var catchGenesisProtection = require('./../utils/revert_exceptions.js').catchGen
 var catchArbProtection = require('./../utils/revert_exceptions.js').catchArbProtection;
 var getParaswapPath = require('./../utils/paraswap').getPath;
 var encodeParaswapPath = require('./../utils/paraswap').encodePath;
+var catchDepositLimit = require('./../utils/revert_exceptions').catchDepositLimit;
 
 var stablePerformanceFee;
 var ethPerformanceFee;
@@ -158,6 +159,8 @@ contract("FundDeployer", async (accounts) => {
             "The Cool Man",
             depositAssetETH,
             ethPerformanceFee * 10000,
+            0,
+            0,
             {from: manager, gas: 6500000}
         );
 
@@ -166,6 +169,8 @@ contract("FundDeployer", async (accounts) => {
             "The Cool Man",
             depositAssetSTABLECOIN,
             stablePerformanceFee * 10000,
+            0,
+            0,
             {from: manager, gas: 6500000}
         );
 
@@ -197,7 +202,9 @@ contract("FundDeployer", async (accounts) => {
             100000,
             mockAddress,
             mockAddress,
-            mockAddress
+            mockAddress,
+            0,
+            0
         ));
     });
 
@@ -295,6 +302,38 @@ contract("FundDeployer", async (accounts) => {
 
         assert.equal(logic, gottenLogic);
         assert.equal(logic, gottenLogic2);
+    });
+
+    it("[FUND] Min Deposit", async() => {
+        var wethaddr = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+        var wethContract = await WETH.at(wethaddr);
+        var user = accounts[3];
+        var manager = accounts[2];
+        var ethfund = await FundLogic.at(fundProxyETH);
+
+        await ethfund.changeMinDeposit(2, {from: manager});
+
+        await wethContract.approve(fundProxyETH, new BN('0', 10), {from: user});
+        await wethContract.approve(fundProxyETH, new BN('1', 10), {from: user});
+        await catchDepositLimit(ethfund.deposit(1, {from: user}));
+
+        await ethfund.changeMinDeposit(0, {from: manager});
+    });
+
+    it("[FUND] Max Deposit", async() => {
+        var wethaddr = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+        var wethContract = await WETH.at(wethaddr);
+        var user = accounts[3];
+        var manager = accounts[2];
+        var ethfund = await FundLogic.at(fundProxyETH);
+
+        await ethfund.changeMaxDeposit(2, {from: manager});
+
+        await wethContract.approve(fundProxyETH, new BN('0', 10), {from: user});
+        await wethContract.approve(fundProxyETH, new BN('5', 10), {from: user});
+        await catchDepositLimit(ethfund.deposit(5, {from: user}));
+
+        await ethfund.changeMaxDeposit(0, {from: manager});
     });
 
     it("[FUND] Deposit and share emission (multiple accounts)", async () => {
@@ -984,7 +1023,7 @@ contract("FundDeployer", async (accounts) => {
         assert.equal(botsBalAfter, 0);
 
         assert.equal(totalSupplyBefore > totalSupplyAfter, true);
-        assert.equal(totalSupplyAfter, (totalSupplyBefore-botsBalBefore));
+        assert.equal(Math.round(totalSupplyAfter / 10**18).toString(), Math.round((totalSupplyBefore-botsBalBefore) / 10**18).toString());
     });
 
     it("[BUYBACK] Uniswap swap (to BOTS)", async () => {

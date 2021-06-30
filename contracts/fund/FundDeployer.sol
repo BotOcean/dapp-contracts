@@ -189,13 +189,15 @@ contract FundDeployer {
         string memory _fundName,
         string memory _managerName,
         address _depositAsset,
-        uint256 _performanceFee
+        uint256 _performanceFee,
+        uint256 _minDeposit,
+        uint256 _maxDeposit
     ) external returns (address) {
         require(_performanceFee <= MAX_PERFORMANCE_FEE_ALLOWED, "Performance fee too big");
         // _depositAsset will be validated when the fund is created
 
         bytes memory constructData = abi.encodeWithSignature(
-            "init(address,address,address,string,string,address,uint256,address,address,address)",
+            "init(address,address,address,string,string,address,uint256,address,address,address,uint256,uint256)",
             oracle,
             address(this),
             msg.sender,
@@ -205,7 +207,9 @@ contract FundDeployer {
             _performanceFee,
             PARASWAP_TOKEN_PROXY,
             PARASWAP_AUGUSTUS,
-            buybackVault
+            buybackVault,
+            _minDeposit,
+            _maxDeposit
         );
 
         address _fundProxy = address(new FundProxy(constructData, fundLogic));
