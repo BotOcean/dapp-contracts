@@ -422,7 +422,7 @@ contract FundLogic is FundShares, FundLibrary{
     }
 
     function _settleFees() internal {
-        if(managerFeesEnabled){
+        if(managerFeesEnabled && PERFORMANCE_FEE > 0){
             uint256 feeWaitTime = FundDeployer(deployer).getFeeWaitPeriod();
             uint256 _currentSharePrice = sharePriceUSD();
             uint256 _totalSupply = totalSupply();
