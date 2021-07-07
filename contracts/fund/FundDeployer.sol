@@ -237,4 +237,8 @@ contract FundDeployer {
     function getRegisteredFundsLength() external view returns (uint) {
         return deployedFunds.length;
     }
+
+    function getIsDeployedFund(address _fund) external view returns (bool) {
+        return isDeployedFund[_fund];
+    }
 }

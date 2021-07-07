@@ -22,6 +22,7 @@
     "bn.js": "^5.2.0",
     "ganache-cli": "^6.11.1-beta.1",
     "ganache-core": "^2.13.1-beta.1",
+    "hardhat": "^2.4.1",
     "truffle": "^5.3.10"
   }
 }

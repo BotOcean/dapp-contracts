@@ -154,6 +154,10 @@ contract FundLogic is FundShares, FundLibrary{
         return isActiveAsset[_asset];
     }
 
+    function getActiveAssetsLength() external view returns (uint) {
+        return activeAssets.length;
+    }
+
     // Only Manager can call this function to get new paraswap addresses
     // They are fetched from the FundDeployer
     // Migrations are not "automatic" to prevent the FundDeployer's owner ability to create
