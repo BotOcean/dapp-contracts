@@ -22,7 +22,6 @@ module.exports = async function(deployer) {
         "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2", //SUSHI
         "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984", //UNI
         "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e", //YFI
-        "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2", //MKR
         "0xD533a949740bb3306d119CC777fa900bA034cd52", //CRV
         "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b", //DPI
         "0x35a532d376ffd9a705d0bb319532837337a398e7", //WDOGE
@@ -47,7 +46,6 @@ module.exports = async function(deployer) {
         "0xCc70F09A6CC17553b2E31954cD36E4A2d89501f7",
         "0x553303d460EE0afB37EdFf9bE42922D8FF63220e",
         "0xA027702dbb89fbd58938e4324ac03B58d812b0E1",
-        "0xec1D1B3b0443256cc3860e24a46F108e699484Aa",
         "0xCd627aA160A6fA45Eb793D19Ef54f5062F20f33f",
         "0xD2A593BF7594aCE1faD597adb697b5645d5edDB2",
         "0x2465CefD3b488BE410b941b1d4b2767088e2A028",

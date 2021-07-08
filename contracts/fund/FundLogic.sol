@@ -216,7 +216,6 @@ contract FundLogic is FundShares, FundLibrary{
 
     function addActiveAsset(address _asset) external onlyManager {
         _addActiveAsset(_asset);
-        emit AssetAdded(_asset);
     }
 
     function removeActiveAsset(address _asset) external onlyManager {
@@ -245,6 +244,7 @@ contract FundLogic is FundShares, FundLibrary{
             require(activeAssets.length < MAX_ASSETS, "Max assets reached");
             activeAssets.push(_asset);
             isActiveAsset[_asset] = true;
+            emit AssetAdded(_asset);
         }
     }
 
@@ -420,7 +420,10 @@ contract FundLogic is FundShares, FundLibrary{
     // The path will be made available from Paraswap's param transaction builder API.
     function swap(address _src, address _dst, uint256 _amount, uint256 _toAmount, uint256 _expectedAmount, IParaswapAugustus.Path[] memory _path) external onlyManager {
         require(_src != _dst, "same asset");
-        require(isActiveAsset[_src] && isActiveAsset[_dst], "Unknown assets");
+        require(isActiveAsset[_src], "Unknown asset");
+        if(!isActiveAsset[_dst]) {
+            _addActiveAsset(_dst);
+        }
         uint256 _swapAmount = _amount;
         uint256 _myBal = ERC20(_src).balanceOf(address(this));
         if(_myBal < _swapAmount) {
