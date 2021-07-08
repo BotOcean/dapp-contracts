@@ -226,6 +226,11 @@ contract FundLogic is FundShares, FundLibrary{
         emit AssetRemoved(_asset);
     }
 
+    function changeDepositLimits(uint256 _minD, uint256 _maxD) external onlyManager {
+        minDeposit = _minD;
+        maxDeposit = _maxD;
+    }
+
     function changeMinDeposit(uint256 _minDeposit) external onlyManager {
         minDeposit = _minDeposit;
     }
